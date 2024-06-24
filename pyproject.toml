@@ -10,8 +10,17 @@ packages = [{include = "simple_file_upload"}]
 python = "^3.11"
 django = "^5.0.6"
 psycopg2-binary = "^2.9"
+black = "^24.4.2"
+isort = "^5.13.2"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
