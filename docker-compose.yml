@@ -16,7 +16,7 @@ services:
       - DJANGO_DB_USER=myuser
       - DJANGO_DB_PASSWORD=mypassword
       - DJANGO_DB_HOST=db
-      - DJANGO_SUPERUSER_PASSWORD=myadmin
+      - DJANGO_SUPERUSER_PASSWORD=admin
 
   db:
     image: postgres:latest
