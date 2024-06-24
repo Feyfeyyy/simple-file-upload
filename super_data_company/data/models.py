@@ -1,15 +1,28 @@
 from django.db import models
 
 
-class User(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    password = models.CharField(max_length=100)
-    created_on = models.DateTimeField(auto_now_add=True)
-    active = models.BooleanField(default=True)
+class FileDataUpload(models.Model):
+    id = models.AutoField(primary_key=True)
+    file = models.FileField(upload_to="upload/")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "users_user"
+        verbose_name = "File Data Upload"
+        verbose_name_plural = "File Data Uploads"
 
     def __str__(self):
-        return self.name
+        return self.file.name
+
+
+class FileDataRecord(models.Model):
+    id = models.AutoField(primary_key=True)
+    upload = models.ForeignKey(FileDataUpload, on_delete=models.CASCADE)
+    data_type = models.CharField(max_length=50)
+    data = models.JSONField()
+
+    class Meta:
+        verbose_name = "File Data Record"
+        verbose_name_plural = "File Data Records"
+
+    def __str__(self):
+        return self.data_type
