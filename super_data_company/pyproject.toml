@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "simple-file-upload"
+version = "0.1.0"
+description = "A simple file upload app"
+authors = ["Feyaaz <feyaazc94@gmail.com>"]
+readme = "README.md"
+packages = [{include = "simple_file_upload"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.0.6"
+psycopg2-binary = "^2.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
