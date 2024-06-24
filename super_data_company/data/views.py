@@ -1,12 +1,9 @@
-import csv
-import json
-
 from django.http import JsonResponse
-from django.shortcuts import render
 from django.views.generic.edit import FormView
 
 from .forms import FileUploadForm
 from .models import FileDataRecord, FileDataUpload
+from .parser.constuctor import get_constructor
 
 
 class FileUploadView(FormView):
@@ -16,22 +13,18 @@ class FileUploadView(FormView):
 
     def form_valid(self, form):
         file = form.cleaned_data["file"]
+        file_name = file.name
 
-        if file.name.endswith(".csv"):
-            data_type = "csv"
-            data = list(csv.DictReader(file.read().decode("utf-8").splitlines()))
-        elif file.name.endswith(".json"):
-            data_type = "json"
-            data = json.load(file)
-        else:
-            return JsonResponse(
-                {"status": "error", "message": "Unsupported file type"}, status=400
-            )
+        try:
+            parser = get_constructor(file_name)
+            data = parser.parse(file)
+        except ValueError as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
 
         upload = FileDataUpload.objects.create(file=file)
         for record in data:
             FileDataRecord.objects.create(
-                upload=upload, data_type=data_type, data=record
+                upload=upload, data_type=file_name.split(".")[-1], data=record
             )
 
         return JsonResponse(
