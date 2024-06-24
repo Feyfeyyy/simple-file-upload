@@ -1,0 +1,38 @@
+services:
+  web:
+    build: .
+    entrypoint: /app/entrypoint.sh
+    command: poetry run python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DJANGO_DB_NAME=mydatabase
+      - DJANGO_DB_PORT=5432
+      - DJANGO_DB_USER=myuser
+      - DJANGO_DB_PASSWORD=mypassword
+      - DJANGO_DB_HOST=db
+      - DJANGO_SUPERUSER_PASSWORD=myadmin
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U myuser -d mydatabase"]
+        interval: 5s
+        timeout: 5s
+        retries: 5
+
+volumes:
+  postgres_data:
