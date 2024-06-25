@@ -14,6 +14,8 @@ The project is built using Python Django and uses Postgres as the database.
 - [List of Requirements Needed For Project Before Installation](#list-of-requirements-needed-for-project-before-installation)
 - [Installation Using Docker](#installation-using-docker)
 - [Installation Without Docker](#installation-without-docker)
+- [How to Use](#how-to-use)
+- [Error Handling](#error-handling)
 - [Future Comments](#future-comments)
 
 ---
@@ -23,6 +25,7 @@ The project is built using Python Django and uses Postgres as the database.
 2. Admin Access
 3. File Processing
 4. Database Storage
+5. Query Engine
 
 ---
 
@@ -81,15 +84,252 @@ python manage.py runserver
 
 ---
 
+## How to Use
+
+Once the project is installed, you can access the project by going to the following URL:
+    
+```bash
+http://localhost:8000
+```
+
+To access the admin panel, you can go to the following URL:
+
+If you have used the Docker installation, the superuser credentials are:
+
+- Username: admin
+- Password: admin
+    
+```bash
+http://localhost:8000/admin
+```
+
+To access the file upload page, you can go to the following URL:
+
+You will be presented with a minimalistic UI that allows you to upload a file. The file will be processed and the data will be stored in the database.
+    
+```bash
+http://localhost:8000/data/upload
+```
+
+To access the query engine, here are some examples of how to query the data:
+
+a data example.
+```json
+[
+    {"name": "John Doe", "age": 30, "city": "New York"},
+    {"name": "Jane Smith", "age": 25, "city": "Los Angeles"},
+    {"name": "John Smith", "age": 25, "city": "Los Angeles"},
+    {"name": "Jane Doe", "age": 30, "city": "New York"}
+]
+```
+
+If looking to see all the data that has been stored in the database, you can go to the following URL:
+    
+```bash
+http://localhost:8000/data/query
+```
+
+results will be:
+```json
+{
+  "status": "success",
+  "message": "Data retrieved successfully",
+  "data": [
+    {
+      "data": {
+        "name": "John Doe",
+        "age": 30,
+        "city": "New York"
+      },
+      "file_name": "test.csv",
+      "file_id": 1
+    },
+    {
+      "data": {
+        "name": "Jane Smith",
+        "age": 25,
+        "city": "Los Angeles"
+      },
+      "file_name": "test.json",
+      "file_id": 2
+    },
+    {
+      "data": {
+        "name": "John Smith",
+        "age": 25,
+        "city": "Los Angeles"
+      },
+      "file_name": "test.csv",
+      "file_id": 3
+    },
+    {
+      "data": {
+        "name": "Jane Doe",
+        "age": 30,
+        "city": "New York"
+      },
+      "file_name": "test.json",
+      "file_id": 4
+    }
+  ]
+}
+```
+
+If looking to filter the data by file type, you can go to the following URL:
+    
+```bash
+http://localhost:8000/data/query?type=csv
+```
+
+results will be:
+```json
+{
+    "status": "success",
+    "message": "Data retrieved successfully",
+    "data": [
+        {
+            "data": {"name": "John Doe", "age": 30, "city": "New York"},
+            "file_name": "test.csv",
+            "file_id": 1
+        },
+        {
+            "data": {"name": "John Smith", "age": 25, "city": "Los Angeles"},
+            "file_name": "test.csv",
+            "file_id": 3
+        }
+    ]
+}
+```
+
+If looking to filter by exact match of the data, you can go to the following URL:
+
+```bash
+http://localhost:8000/data/query?name=John
+```
+
+results will be:
+```json
+{
+    "status": "success",
+    "message": "Data retrieved successfully",
+    "data": [
+        {
+            "data": {"name": "John Doe", "age": 30, "city": "New York"},
+            "file_name": "test.csv",
+            "file_id": 1
+        },
+        {
+            "data": {"name": "John Smith", "age": 25, "city": "Los Angeles"},
+            "file_name": "test.csv",
+            "file_id": 3
+        }
+    ]
+}
+```
+
+or you are able to combine the query by file type and exact match of the data, you can go to the following URL:
+
+```bash
+http://localhost:8000/data/query?type=csv&name=John
+```
+
+results will be:
+```json
+{
+    "status": "success",
+    "message": "Data retrieved successfully",
+    "data": [
+        {
+            "data": {"name": "John Doe", "age": 30, "city": "New York"},
+            "file_name": "test.csv",
+            "file_id": 1
+        },
+        {
+            "data": {"name": "John Smith", "age": 25, "city": "Los Angeles"},
+            "file_name": "test.csv",
+            "file_id": 3
+        }
+    ]
+}
+```
+
+lastly, if you are looking to partial search of the data, you can go to the following URL:
+
+```bash
+http://localhost:8000/data/query/?type=json&match=partial&name=Jane
+```
+
+results will be:
+```json
+{
+    "status": "success",
+    "message": "Data retrieved successfully",
+    "data": [
+        {
+            "data": {"name": "Jane Smith", "age": 25, "city": "Los Angeles"},
+            "file_name": "test.json",
+            "file_id": 2
+        },
+        {
+            "data": {"name": "Jane Doe", "age": 30, "city": "New York"},
+            "file_name": "test.json",
+            "file_id": 4
+        }
+    ]
+}
+```
+
+---
+
+## Error Handling
+
+If there are any errors, the following error messages will be displayed:
+
+This error message will be displayed if there are no matching records found:
+
+```json
+{
+    "status": "error",
+    "message": "No matching records found"
+}
+```
+
+This error message will be displayed if there are any errors with the file upload:
+
+```json
+{
+    "status": "error",
+    "message": "Unable to upload file, please see errors",
+    "errors": {
+        "file": [
+            "This field is required."
+        ]
+    }
+}
+
+```
+
+This error message will be displayed if you provide a match type that is not supported:
+
+```json
+{
+    "status": "error",
+    "message": "Unsupported match type"
+}
+```
+
+---
 ## Future Comments
 
 - Add more features
+- Add ENV variables for security
 - Improve the UI
 - Add logging for debugging
 - Add Django tests so that the project can be tested
 - Add User Authentication and Authorization with JWT
 - Add a CI/CD pipeline for the project using Github Actions or Jenkins
 - Add different environments for the project (Development, Staging, Production)
+- Possibly add Django Rest Framework for API endpoints, so that the project can be used as a REST API
 - Possibly more file types for upload if needed
 - Possibly more file processing options
 - Possibly a NO-SQL database for storage with the input of the data
