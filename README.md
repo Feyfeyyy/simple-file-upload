@@ -40,8 +40,8 @@ The project is built using Django Web Framework and uses Postgres as the databas
 
 ## Installation Using Docker
 
-The docker file is already created and the docker-compose file is already created. The docker-compose file will build the image and run the container. 
-The docker-compose file will also create the database and the superuser and auto run the migrations on every docker compose up.
+The docker-compose file will build and create the database and Django framework with 
+the superuser created and the migrations created on every docker compose up.
 
 1. Clone the repository
 ```bash
