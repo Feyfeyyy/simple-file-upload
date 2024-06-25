@@ -132,30 +132,47 @@ http://localhost:8000/data/query
 results will be:
 ```json
 {
-    "status": "success",
-    "message": "Data retrieved successfully",
-    "data": [
-        {
-            "data": {"name": "John Doe", "age": 30, "city": "New York"},
-            "file_name": "test.csv",
-            "file_id": 1
-        },
-        {
-            "data": {"name": "Jane Smith", "age": 25, "city": "Los Angeles"},
-            "file_name": "test.json",
-            "file_id": 2
-        },
-        {
-            "data": {"name": "John Smith", "age": 25, "city": "Los Angeles"},
-            "file_name": "test.csv",
-            "file_id": 3
-        },
-        {
-            "data": {"name": "Jane Doe", "age": 30, "city": "New York"},
-            "file_name": "test.json",
-            "file_id": 4
-        }
-    ]
+  "status": "success",
+  "message": "Data retrieved successfully",
+  "data": [
+    {
+      "data": {
+        "name": "John Doe",
+        "age": 30,
+        "city": "New York"
+      },
+      "file_name": "test.csv",
+      "file_id": 1
+    },
+    {
+      "data": {
+        "name": "Jane Smith",
+        "age": 25,
+        "city": "Los Angeles"
+      },
+      "file_name": "test.json",
+      "file_id": 2
+    },
+    {
+      "data": {
+        "name": "John Smith",
+        "age": 25,
+        "city": "Los Angeles"
+      },
+      "file_name": "test.csv",
+      "file_id": 3
+    },
+    {
+      "data": {
+        "name": "Jane Doe",
+        "age": 30,
+        "city": "New York"
+      },
+      "file_name": "test.json",
+      "file_id": 4
+    }
+  ]
+}
 ```
 
 If looking to filter the data by file type, you can go to the following URL:
@@ -183,7 +200,6 @@ results will be:
     ]
 }
 ```
-
 
 If looking to filter by exact match of the data, you can go to the following URL:
 
