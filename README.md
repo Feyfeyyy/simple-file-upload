@@ -2,9 +2,9 @@
 
 Welcome to the simple-file-upload wiki!
 
-This is a simple file upload project using Python Django. The project is a simple web application that allows users to upload files that contains data. The uploaded files are then processed and the data is stored in a database. 
+The project is a simple web application that allows users to upload files that contains data. The uploaded files are then processed and the data is stored in a database. 
 
-The project is built using Python Django and uses Postgres as the database.
+The project is built using Django Web Framework and uses Postgres as the database.
 
 ---
 
