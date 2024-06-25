@@ -15,6 +15,7 @@ The project is built using Python Django and uses Postgres as the database.
 - [Installation Using Docker](#installation-using-docker)
 - [Installation Without Docker](#installation-without-docker)
 - [How to Use](#how-to-use)
+- [Error Handling](#error-handling)
 - [Future Comments](#future-comments)
 
 ---
@@ -259,6 +260,45 @@ results will be:
             "file_id": 4
         }
     ]
+}
+```
+
+---
+
+## Error Handling
+
+If there are any errors, the following error messages will be displayed:
+
+This error message will be displayed if there are no matching records found:
+
+```json
+{
+    "status": "error",
+    "message": "No matching records found"
+}
+```
+
+This error message will be displayed if there are any errors with the file upload:
+
+```json
+{
+    "status": "error",
+    "message": "Unable to upload file, please see errors",
+    "errors": {
+        "file": [
+            "This field is required."
+        ]
+    }
+}
+
+```
+
+This error message will be displayed if you provide a match type that is not supported:
+
+```json
+{
+    "status": "error",
+    "message": "Unsupported match type"
 }
 ```
 
