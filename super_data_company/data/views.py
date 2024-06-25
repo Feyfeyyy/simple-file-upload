@@ -3,7 +3,8 @@ from django.views.generic.edit import FormView
 
 from .forms import FileUploadForm
 from .models import FileDataRecord, FileDataUpload
-from .parser.constuctor import get_constructor
+from .parser.constructor import get_constructor
+from .queries.constructor import get_constructor
 
 
 class FileUploadView(FormView):
@@ -44,10 +45,26 @@ class FileUploadView(FormView):
 
 def query_data(request):
     data_type = request.GET.get("type")
+    match_type = request.GET.get("match", "exact")  # Default to exact match
+    query_params = request.GET.dict()
+    query_params.pop("type", None)  # Remove 'type' from the filtering criteria
+    query_params.pop("match", None)  # Remove 'match' from the filtering criteria
     if data_type:
         records = FileDataRecord.objects.filter(data_type=data_type)
     else:
         records = FileDataRecord.objects.all()
+
+    if not records.exists():
+        return JsonResponse(
+            {"status": "error", "message": "No matching records found"}, status=404
+        )
+
+    records = list(records)
+    try:
+        strategy = get_constructor(match_type)
+    except ValueError as e:
+        return JsonResponse({"status": "error", "message": str(e)}, status=400)
+    filtered_records = strategy.filter(records, query_params)
 
     data = [
         {
@@ -55,13 +72,8 @@ def query_data(request):
             "file_name": record.upload.file.name,
             "file_id": record.upload.id,
         }
-        for record in records
+        for record in filtered_records
     ]
-
-    if not records.exists():
-        return JsonResponse(
-            {"status": "error", "message": "No matching records found"}, status=404
-        )
 
     response_data = {
         "status": "success",
