@@ -295,7 +295,7 @@ This error message will be displayed if there are no matching records found:
 }
 ```
 
-This error message will be displayed if there are any errors with the file upload:
+This error message will be displayed if there are any errors with the form:
 
 ```json
 {
@@ -316,6 +316,15 @@ This error message will be displayed if you provide a match type that is not sup
 {
     "status": "error",
     "message": "Unsupported match type"
+}
+```
+
+This error message will be displayed if you provide a file type that is not supported:
+
+```json
+{
+    "status": "error",
+    "message": "Unsupported file type"
 }
 ```
 
